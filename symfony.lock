@@ -21,7 +21,7 @@
         "version": "2.12.0"
     },
     "doctrine/dbal": {
-        "version": "v2.10.1"
+        "version": "2.10.2"
     },
     "doctrine/doctrine-bundle": {
         "version": "2.0",
@@ -492,6 +492,15 @@
             "config/packages/test/web_profiler.yaml",
             "config/routes/dev/web_profiler.yaml"
         ]
+    },
+    "symfony/web-server-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "dae9b39fd6717970be7601101ce5aa960bf53d9a"
+        }
     },
     "symfony/yaml": {
         "version": "v5.0.7"
