@@ -27,9 +27,15 @@ class Reponse
     private $reponse;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private $reponse_expected;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Question", inversedBy="reponses")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $questions;
 
     public function getId(): ?int
     {
@@ -60,14 +66,26 @@ class Reponse
         return $this;
     }
 
-    public function getReponseExpected(): ?int
+    public function getReponseExpected(): ?bool
     {
         return $this->reponse_expected;
     }
 
-    public function setReponseExpected(int $reponse_expected): self
+    public function setReponseExpected(bool $reponse_expected): self
     {
         $this->reponse_expected = $reponse_expected;
+
+        return $this;
+    }
+
+    public function getQuestions(): ?Question
+    {
+        return $this->questions;
+    }
+
+    public function setQuestions(?Question $questions): self
+    {
+        $this->questions = $questions;
 
         return $this;
     }

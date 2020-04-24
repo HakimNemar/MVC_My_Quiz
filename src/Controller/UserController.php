@@ -2,14 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Form\RegistrationType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Entity\User;
+use App\Entity\Categorie;
+use App\Entity\Question;
 
 class UserController extends AbstractController
 {
@@ -28,7 +29,27 @@ class UserController extends AbstractController
      */
     public function home()
     {
-        return $this->render('user/home.html.twig');
+        $repo = $this->getDoctrine()->getRepository(Categorie::class);
+        $categorieQuiz = $repo->findAll();
+
+        return $this->render('user/home.html.twig', [
+            'categorie' => $categorieQuiz
+        ]);
+    }
+
+    /**
+     * @Route("/categorie/{id}", name="categorie")
+     */
+    public function showByCategorieId($id)
+    {
+        $repo = $this->getDoctrine()->getRepository(Question::class);
+        $questionByCategorie = $repo->findBy([
+                'id_categorie' => $id
+            ]);
+
+        return $this->render('user/categorieId.html.twig', [
+            'question' => $questionByCategorie
+        ]);
     }
 
     /**
