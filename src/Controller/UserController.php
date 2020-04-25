@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 use App\Entity\Categorie;
 use App\Entity\Question;
+use App\Repository\ReponseRepository;
 
 class UserController extends AbstractController
 {
@@ -38,17 +39,27 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/categorie/{id}", name="categorie")
+     * @Route("/categorie/{id}/{ques}", name="categorie")
      */
-    public function showByCategorieId($id)
+    public function showByCategorieId($id, $ques, ReponseRepository $repos)
     {
+        if (!$ques) {
+            $ques = 1;
+        }
+
         $repo = $this->getDoctrine()->getRepository(Question::class);
         $questionByCategorie = $repo->findBy([
                 'id_categorie' => $id
             ]);
 
+        $callRepo = $repos->findBy([
+            'id_question' => $ques
+        ]);
+
         return $this->render('user/categorieId.html.twig', [
-            'question' => $questionByCategorie
+            'question' => $questionByCategorie,
+            'reponse' => $callRepo,
+            'ques' => $ques
         ]);
     }
 

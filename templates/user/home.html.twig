@@ -3,12 +3,16 @@
 
 <h1>Choose Category</h1>
 
+{% set nbr = 0 %}
+
 {% for categories in categorie %}
 
     <div>
         <br>
-        <a href="{{ path('categorie', {'id': categories.id }) }}"><h4>{{ categories.id }}. {{ categories.name }}</h4></a>
+        <a href="{{ path('categorie', {'id': categories.id, 'ques': nbr ~ 1 }) }}"><h4>{{ categories.id }}. {{ categories.name }}</h4></a>
     </div>
+
+    {% set nbr = nbr + 1%}
 {% endfor %}
 
 {% endblock %}

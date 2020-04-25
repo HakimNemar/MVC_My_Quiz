@@ -1,13 +1,43 @@
 {% extends "base.html.twig" %}
 {% block body %}
 
+{% set test = 0 %}
+
 {% for questions in question %}
+    {% set test = test + 1 %}
 
-    <div>
-        <br>
-        <h4>{{ questions.question }}</h4>
-    </div> 
+    {% if questions.id == app.request.get('ques') %}
+        <div>
+            <br>
+            <h4>{{ questions.question }}</h4>
+            <br>
+        </div>
 
+        {% if test != 10 %}
+            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1 }) }}" method="POST">
+        {% else %}
+            <form action="{{ path('home') }}" method="POST">
+        {% endif %}
+
+        {% for reponses in reponse  %}
+
+            <div class="form-group row">
+                <div>
+                    <input type="radio" name="reponse" value="{{ reponses.reponse }}">
+                    <label for="huey">{{ reponses.reponse }}</label>
+                </div>
+            </div>
+            
+        {% endfor %}
+
+            <div class="form-group row mb-0">
+                <div class="col-md-6 offset-md-4">
+                    <button type="submit" class="btn btn-primary">Next</button>
+                </div>
+            </div>
+        </form>
+
+    {% endif %}
 {% endfor %}
 
 {% endblock %}
