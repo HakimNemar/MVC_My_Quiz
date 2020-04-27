@@ -56,11 +56,28 @@ class UserController extends AbstractController
             'id_question' => $ques
         ]);
 
-        return $this->render('user/categorieId.html.twig', [
-            'question' => $questionByCategorie,
-            'reponse' => $callRepo,
-            'ques' => $ques
+        $reponseExpected = $repos->findBy([
+            'id_question' => $ques,
+            'reponse_expected' => 1
         ]);
+
+        if (isset($_POST['reponse'])) {
+            return $this->render('user/categorieId.html.twig', [
+                'question' => $questionByCategorie,
+                'reponse' => $callRepo,
+                'ques' => $ques,
+                'post' => $_POST['reponse'],
+                'valide' => $reponseExpected
+            ]);
+        }
+        else {
+            return $this->render('user/categorieId.html.twig', [
+                'question' => $questionByCategorie,
+                'reponse' => $callRepo,
+                'ques' => $ques,
+                'valide' => $reponseExpected
+                ]);
+        }
     }
 
     /**
@@ -86,6 +103,37 @@ class UserController extends AbstractController
         return $this->render('user/register.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/profile", name="profile")
+     */
+    public function editPorfile(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
+    {
+        $user = new User();
+        $form = $this->createForm(RegistrationType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $hash = $encoder->encodePassword($user, $user->getPassword());
+            
+            $this->getUser()->setPassword($hash);
+            $this->getUser()->setUsername($user->getUsername());
+            $this->getUser()->setEmail($user->getEmail());
+        
+            $manager->persist($this->getUser());
+            $manager->flush();
+        }
+
+        if ($this->getUser()) {
+            return $this->render('user/profile.html.twig', [
+                'form' => $form->createView()
+                ]);
+        }
+        else {
+            return $this->redirectToRoute('login');
+        }
     }
 
     /**

@@ -2,6 +2,10 @@
 {% block body %}
 
 {% set test = 0 %}
+{% set correct = [] %}
+{% for val in valide  %}
+    {% set correct = correct|merge([val.reponse]) %}
+{% endfor %}
 
 {% for questions in question %}
     {% set test = test + 1 %}
@@ -14,25 +18,41 @@
         </div>
 
         {% if test != 10 %}
-            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1 }) }}" method="POST">
+            {% if post is defined %}
+                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1 }) }}" method="POST">
+            {% else %}
+                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques }) }}" method="POST">
+            {% endif %}
         {% else %}
             <form action="{{ path('home') }}" method="POST">
         {% endif %}
 
-        {% for reponses in reponse  %}
+        {% if post is defined %}
+            {% if post == correct[0] %}
+                <p>Bonne réponse</p>
+            {% else %}
+                <p>La bonne réponse était {{ correct[0] }}</p>
+            {% endif %}
+        {% else %}
+            {% for reponses in reponse  %}
 
-            <div class="form-group row">
-                <div>
-                    <input type="radio" name="reponse" value="{{ reponses.reponse }}">
-                    <label for="huey">{{ reponses.reponse }}</label>
+                <div class="form-group row">
+                    <div>
+                        <input type="radio" name="reponse" value="{{ reponses.reponse }}">
+                        <label for="huey">{{ reponses.reponse }}</label>
+                    </div>
                 </div>
-            </div>
-            
-        {% endfor %}
+                
+            {% endfor %}
+        {% endif %}
 
             <div class="form-group row mb-0">
                 <div class="col-md-6 offset-md-4">
+                {% if post is defined %}
                     <button type="submit" class="btn btn-primary">Next</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                {% endif %}
                 </div>
             </div>
         </form>
