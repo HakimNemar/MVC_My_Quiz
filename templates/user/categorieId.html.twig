@@ -10,6 +10,7 @@
 
 {% for questions in question %}
     {% set test = test + 1 %}
+    {% set test2 = test2 + 1 %}
 
     {% if questions.id == app.request.get('ques') %}
         <div>
@@ -20,9 +21,17 @@
 
         {% if test != 10 %}
             {% if post is defined %}
-                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1 }) }}" method="POST">
+                    {% if post == correct[0] %}
+                        {% if app.request.get('value') is empty %}
+                            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': 0 }) }}" method="POST">
+                        {% else %}
+                            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': app.request.get('value') + 1 }) }}" method="POST">
+                        {% endif %}
+                    {% else %}
+                        <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': 0 }) }}" method="POST">
+                    {% endif %}
             {% else %}
-                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques }) }}" method="POST">
+                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques}) }}" method="POST">
             {% endif %}
         {% else %}
             <form action="{{ path('home') }}" method="POST">
@@ -62,16 +71,9 @@
 
         <h1>{{ test2 - 1 }} / {{ question|length }}</h1>
 
-        
-
-        {{ form_start(form) }}
-            {% for reponses in reponse  %}
-
-                {{ form_widget(form.reponses.reponse) }}
-                
-            {% endfor %}
-        {{ form_end(form) }}
-
+        {% if post is defined %}
+            {% set test2 = test2 - 1 %}
+        {% endif %}
     {% endif %}
 {% endfor %}
 

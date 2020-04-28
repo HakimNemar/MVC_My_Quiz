@@ -44,14 +44,6 @@ class UserController extends AbstractController
      */
     public function showByCategorieId($id, $ques, ReponseRepository $repos)
     {
-        $quiz = new Reponse();
-
-        $form = $this->createFormBuilder($quiz)
-                     ->add('reponse')
-                     ->add('reponse')
-                     ->add('reponse')
-                     ->getForm();
-
         if (!$ques) {
             $ques = 1;
         }
@@ -76,8 +68,7 @@ class UserController extends AbstractController
                 'reponse' => $callRepo,
                 'ques' => $ques,
                 'post' => $_POST['reponse'],
-                'valide' => $reponseExpected,
-                'form' => $form->createView()
+                'valide' => $reponseExpected
             ]);
         }
         else {
@@ -85,8 +76,7 @@ class UserController extends AbstractController
                 'question' => $questionByCategorie,
                 'reponse' => $callRepo,
                 'ques' => $ques,
-                'valide' => $reponseExpected,
-                'form' => $form->createView()
+                'valide' => $reponseExpected
                 ]);
         }
     }
