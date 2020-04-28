@@ -10,7 +10,6 @@
 
 {% for questions in question %}
     {% set test = test + 1 %}
-    {% set test2 = test2 + 1 %}
 
     {% if questions.id == app.request.get('ques') %}
         <div>
@@ -31,10 +30,8 @@
 
         {% if post is defined %}
             {% if post == correct[0] %}
-                {# <input id="prodId" name="val" type="hidden" value="bon"> #}
                 <p>Bonne réponse</p>
             {% else %}
-                {# <input id="prodId" name="val" type="hidden" value="pasbon"> #}
                 <p>La bonne réponse était {{ correct[0] }}</p>
             {% endif %}
         {% else %}
@@ -50,13 +47,6 @@
             {% endfor %}
         {% endif %}
 
-        {# {% if post is defined %}
-            {% if post == correct[0] %}
-                <input id="prodId" name="val" type="hidden" value="bon">
-            {% endif %}
-        {% endif %}
-        <input id="prodId" name="val" type="hidden" value= {{ test2 }}> #}
-
             <div class="form-group row mb-0">
                 <div class="col-md-6 offset-md-4">
                     <button type="submit" class="btn btn-primary">
@@ -71,6 +61,17 @@
         </form>
 
         <h1>{{ test2 - 1 }} / {{ question|length }}</h1>
+
+        
+
+        {{ form_start(form) }}
+            {% for reponses in reponse  %}
+
+                {{ form_widget(form.reponses.reponse) }}
+                
+            {% endfor %}
+        {{ form_end(form) }}
+
     {% endif %}
 {% endfor %}
 

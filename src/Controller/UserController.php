@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 use App\Entity\Categorie;
 use App\Entity\Question;
+use App\Entity\Reponse;
 use App\Repository\ReponseRepository;
 
 class UserController extends AbstractController
@@ -43,7 +44,13 @@ class UserController extends AbstractController
      */
     public function showByCategorieId($id, $ques, ReponseRepository $repos)
     {
-        $test = 0;
+        $quiz = new Reponse();
+
+        $form = $this->createFormBuilder($quiz)
+                     ->add('reponse')
+                     ->add('reponse')
+                     ->add('reponse')
+                     ->getForm();
 
         if (!$ques) {
             $ques = 1;
@@ -63,28 +70,14 @@ class UserController extends AbstractController
             'reponse_expected' => 1
         ]);
 
-        if (isset($_POST['reponse'])) {
-            // if (isset($_POST['val']))
-            // {
-            //     echo $_POST['val'];
-            //     if ($_POST['val'] == "bon"){
-            //         $test++;
-            //     }
-            // }
-            
-            if ($_POST['reponse'] != $reponseExpected[0]->getReponse())
-            {
-                $test = $test - 1;
-                echo $test;
-            }
-            
+        if (isset($_POST['reponse'])) {            
             return $this->render('user/categorieId.html.twig', [
                 'question' => $questionByCategorie,
                 'reponse' => $callRepo,
                 'ques' => $ques,
                 'post' => $_POST['reponse'],
                 'valide' => $reponseExpected,
-                'test2' => $test
+                'form' => $form->createView()
             ]);
         }
         else {
@@ -93,7 +86,7 @@ class UserController extends AbstractController
                 'reponse' => $callRepo,
                 'ques' => $ques,
                 'valide' => $reponseExpected,
-                'test2' => $test
+                'form' => $form->createView()
                 ]);
         }
     }
