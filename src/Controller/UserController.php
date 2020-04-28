@@ -43,6 +43,8 @@ class UserController extends AbstractController
      */
     public function showByCategorieId($id, $ques, ReponseRepository $repos)
     {
+        $test = 0;
+
         if (!$ques) {
             $ques = 1;
         }
@@ -62,12 +64,27 @@ class UserController extends AbstractController
         ]);
 
         if (isset($_POST['reponse'])) {
+            // if (isset($_POST['val']))
+            // {
+            //     echo $_POST['val'];
+            //     if ($_POST['val'] == "bon"){
+            //         $test++;
+            //     }
+            // }
+            
+            if ($_POST['reponse'] != $reponseExpected[0]->getReponse())
+            {
+                $test = $test - 1;
+                echo $test;
+            }
+            
             return $this->render('user/categorieId.html.twig', [
                 'question' => $questionByCategorie,
                 'reponse' => $callRepo,
                 'ques' => $ques,
                 'post' => $_POST['reponse'],
-                'valide' => $reponseExpected
+                'valide' => $reponseExpected,
+                'test2' => $test
             ]);
         }
         else {
@@ -75,7 +92,8 @@ class UserController extends AbstractController
                 'question' => $questionByCategorie,
                 'reponse' => $callRepo,
                 'ques' => $ques,
-                'valide' => $reponseExpected
+                'valide' => $reponseExpected,
+                'test2' => $test
                 ]);
         }
     }
