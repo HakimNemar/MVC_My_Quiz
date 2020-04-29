@@ -13,6 +13,7 @@ use App\Entity\Categorie;
 use App\Entity\Question;
 use App\Entity\Reponse;
 use App\Repository\ReponseRepository;
+use Symfony\Component\Mime\Email;
 
 class UserController extends AbstractController
 {
@@ -84,7 +85,7 @@ class UserController extends AbstractController
     /**
      * @Route("/register", name="register")
      */
-    public function registerUser(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
+    public function registerUser(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
     {
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user);
@@ -100,6 +101,19 @@ class UserController extends AbstractController
 
             return $this->redirectToRoute('login');
         }
+
+                    $to = "hakim-du93@hotmail.fr";
+                    $subject = "Vérification PHP mail";
+                    $mess = "PHP mail marche";
+                    $headers = "From: <hakim-du93@hotmail.fr>";
+                    $se = mail($to, $subject, $mess, $headers);
+                    var_dump($se);
+
+                    $message = (new \Swift_Message('Hello Email'))
+                        ->setFrom('hakim-du93@hotmail.fr')
+                        ->setTo('hakim-du93@hotmail.fr')
+                        ->setBody("test send mail");
+                    $mailer->send($message);
 
         return $this->render('user/register.html.twig', [
             'form' => $form->createView()

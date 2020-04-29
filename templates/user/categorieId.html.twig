@@ -2,7 +2,6 @@
 {% block body %}
 
 {% set test = 0 %}
-{% set test2 = 0 %}
 {% set correct = [] %}
 {% for val in valide  %}
     {% set correct = correct|merge([val.reponse]) %}
@@ -10,51 +9,63 @@
 
 {% for questions in question %}
     {% set test = test + 1 %}
-    {% set test2 = test2 + 1 %}
 
     {% if questions.id == app.request.get('ques') %}
-        <div>
-            <br>
-            <h4>{{ questions.question }}</h4>
-            <br>
+        <div class = 'py-5'>
+            <h3>{{ test }} ) {{ questions.question }}</h3>
         </div>
 
-        {% if test != 10 %}
+        {% if test != 11 %}
             {% if post is defined %}
                     {% if post == correct[0] %}
                         {% if app.request.get('value') is empty %}
-                            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': 0 }) }}" method="POST">
+                            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': 1 }) }}" method="POST">
                         {% else %}
-                            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': app.request.get('value') + 1 }) }}" method="POST">
+                            {% if test == 10 %}
+                                <form action="{{ path('home', {'victoire': vic + 1 }) }}" method="POST">
+                                {{ app.request.get('victoire') }}
+                            {% else %}
+                                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': app.request.get('value') + 1 }) }}" method="POST">
+                            {% endif %}
                         {% endif %}
                     {% else %}
-                        <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': 0 }) }}" method="POST">
+                        <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': app.request.get('value') }) }}" method="POST">
                     {% endif %}
             {% else %}
-                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques}) }}" method="POST">
+                {% if app.request.get('value') is empty %}
+                    <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques, 'value': 0 }) }}" method="POST">
+                {% else %}
+                    <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques, 'value': app.request.get('value') }) }}" method="POST">
+                {% endif %}
             {% endif %}
         {% else %}
             <form action="{{ path('home') }}" method="POST">
         {% endif %}
 
-        {% if post is defined %}
-            {% if post == correct[0] %}
-                <p>Bonne réponse</p>
-            {% else %}
-                <p>La bonne réponse était {{ correct[0] }}</p>
-            {% endif %}
-        {% else %}
-            {% for reponses in reponse  %}
-
-                <div class="form-group row">
-                    <div>
-                        <input type="radio" name="reponse" value="{{ reponses.reponse }}">
-                        <label for="huey">{{ reponses.reponse }}</label>
+        <div class = 'pl-3'>
+            {% if post is defined %}
+                {% if post == correct[0] %}
+                    <div class = 'py-5'>
+                        <h3>Bonne réponse</h3>
                     </div>
-                </div>
-                
-            {% endfor %}
-        {% endif %}
+                {% else %}
+                    <div class = 'py-5'>
+                        <h3>La bonne réponse était "{{ correct[0] }}"</h3>
+                    </div>
+                {% endif %}
+            {% else %}
+                {% for reponses in reponse %}
+
+                    <div class="form-group row">
+                        <div>
+                            <input type="radio" name="reponse" value="{{ reponses.reponse }}">
+                            <label for="huey">{{ reponses.reponse }}</label>
+                        </div>
+                    </div>
+                    
+                {% endfor %}
+            {% endif %}
+        </div>
 
             <div class="form-group row mb-0">
                 <div class="col-md-6 offset-md-4">
@@ -69,11 +80,8 @@
             </div>
         </form>
 
-        <h1>{{ test2 - 1 }} / {{ question|length }}</h1>
+        <h1>{{ app.request.get('value') }} / {{ question|length }}</h1>
 
-        {% if post is defined %}
-            {% set test2 = test2 - 1 %}
-        {% endif %}
     {% endif %}
 {% endfor %}
 
