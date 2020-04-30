@@ -2,6 +2,7 @@
 {% block body %}
 
 <h1>Choose Category</h1>
+<h6>Reponse minimun pour validé un quiz est de 7 sur 10</h6>
 
 {% set nbr = 0 %}
 
@@ -9,7 +10,7 @@
 
     <div>
         <br>
-        <a href="{{ path('categorie', {'id': categories.id, 'ques': nbr ~ 1 }) }}"><h4>{{ categories.id }}. {{ categories.name }}</h4></a>
+        <h4><a href="{{ path('categorie', {'id': categories.id, 'ques': nbr ~ 1, 'victoire':  app.request.get('victoire') }) }}">{{ categories.id }}. {{ categories.name }}</a></h4>
     </div>
 
     {% set nbr = nbr + 1%}

@@ -1,0 +1,26 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+<div class='my-5'>
+    {{ form_start(form) }}
+
+        {{ form_row(form.Categorie) }}
+
+        {{ form_row(form.Question, {'attr': {'label': 'Question'} }) }}
+
+        {{ form_row(form.ReponseCorrect, {'attr': {'label': 'Reponse Correct'} }) }}
+
+        {{ form_row(form.ReponseFausse_1, {'attr': {'label': 'Reponse Fausse 1'} }) }}
+
+        {{ form_row(form.ReponseFausse_2, {'attr': {'label': 'Reponse Fausse 2'} }) }}
+
+        <div class="form-group row mb-0">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-success">Create</button>
+            </div>
+        </div>
+
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}

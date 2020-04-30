@@ -15,27 +15,30 @@
             <h3>{{ test }} ) {{ questions.question }}</h3>
         </div>
 
-        {% if test != 11 %}
+        {% if test < 11 %}
             {% if post is defined %}
                     {% if post == correct[0] %}
                         {% if app.request.get('value') is empty %}
-                            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': 1 }) }}" method="POST">
+                            <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': 1, 'victoire':  app.request.get('victoire')}) }}" method="POST">
                         {% else %}
                             {% if test == 10 %}
-                                <form action="{{ path('home', {'victoire': vic + 1 }) }}" method="POST">
-                                {{ app.request.get('victoire') }}
+                                {% if app.request.get('value') > 7 %}
+                                    <form action="{{ path('home', {'victoire':  app.request.get('victoire') + 1 }) }}" method="POST">
+                                {% else %}
+                                    <form action="{{ path('home', {'victoire':  app.request.get('victoire') }) }}" method="POST">
+                                {% endif %}
                             {% else %}
-                                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': app.request.get('value') + 1 }) }}" method="POST">
+                                <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': app.request.get('value') + 1, 'victoire':  app.request.get('victoire') }) }}" method="POST">
                             {% endif %}
                         {% endif %}
                     {% else %}
-                        <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': app.request.get('value') }) }}" method="POST">
+                        <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques + 1, 'value': app.request.get('value'), 'victoire':  app.request.get('victoire') }) }}" method="POST">
                     {% endif %}
             {% else %}
                 {% if app.request.get('value') is empty %}
-                    <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques, 'value': 0 }) }}" method="POST">
+                    <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques, 'value': 0, 'victoire':  app.request.get('victoire') }) }}" method="POST">
                 {% else %}
-                    <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques, 'value': app.request.get('value') }) }}" method="POST">
+                    <form action="{{ path('categorie', {'id': app.request.get('id'), 'ques': ques, 'value': app.request.get('value'), 'victoire':  app.request.get('victoire') }) }}" method="POST">
                 {% endif %}
             {% endif %}
         {% else %}

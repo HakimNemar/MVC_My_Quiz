@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\RegistrationType;
+use App\Form\CreateQuizType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,7 @@ use App\Entity\Categorie;
 use App\Entity\Question;
 use App\Entity\Reponse;
 use App\Repository\ReponseRepository;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
 class UserController extends AbstractController
@@ -85,7 +87,7 @@ class UserController extends AbstractController
     /**
      * @Route("/register", name="register")
      */
-    public function registerUser(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
+    public function registerUser(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, MailerInterface $mailer)
     {
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user);
@@ -99,21 +101,15 @@ class UserController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
+            $email = (new Email())
+            ->from("hakim.nemar@epitech.eu")
+            ->to($user->getEmail())
+            ->text("Account created !");
+
+            $mailer->send($email);
+
             return $this->redirectToRoute('login');
         }
-
-                    $to = "hakim-du93@hotmail.fr";
-                    $subject = "Vérification PHP mail";
-                    $mess = "PHP mail marche";
-                    $headers = "From: <hakim-du93@hotmail.fr>";
-                    $se = mail($to, $subject, $mess, $headers);
-                    var_dump($se);
-
-                    $message = (new \Swift_Message('Hello Email'))
-                        ->setFrom('hakim-du93@hotmail.fr')
-                        ->setTo('hakim-du93@hotmail.fr')
-                        ->setBody("test send mail");
-                    $mailer->send($message);
 
         return $this->render('user/register.html.twig', [
             'form' => $form->createView()
@@ -145,6 +141,36 @@ class UserController extends AbstractController
             return $this->render('user/profile.html.twig', [
                 'form' => $form->createView()
                 ]);
+        }
+        else {
+            return $this->redirectToRoute('login');
+        }
+    }
+
+    /**
+     * @Route("/createQuiz", name="create.quiz")
+     */
+    public function createQuiz(Request $request)
+    {
+        $categorie = new Categorie();
+        $question = new Question();
+        $reponse = new Reponse();
+
+        $form = $this->createForm(CreateQuizType::class, [$categorie, $question, $reponse]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()){
+            echo $_POST['create_quiz']['Question'];
+            echo $_POST['create_quiz']['ReponseCorrect'];
+            echo $_POST['create_quiz']['ReponseFausse_1'];
+            echo $_POST['create_quiz']['ReponseFausse_2'];
+        }
+
+        if ($this->getUser()) {
+            return $this->render("user/createQuiz.html.twig", [
+                'form' => $form->createView()
+            ]);
         }
         else {
             return $this->redirectToRoute('login');
