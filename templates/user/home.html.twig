@@ -2,18 +2,32 @@
 {% block body %}
 
 <h1>Choose Category</h1>
-<h6>Reponse minimun pour validé un quiz est de 7 sur 10</h6>
+<h6>Pour validé un quiz vous devez au moins avoir 7 sur 10</h6>
 
 {% set nbr = 0 %}
 
-{% for categories in categorie %}
+<div class='row'>
+    <div class='col-md-6'>
+        {% for categories in categorie %}
 
-    <div>
-        <br>
-        <h4><a href="{{ path('categorie', {'id': categories.id, 'ques': nbr ~ 1, 'victoire':  app.request.get('victoire') }) }}">{{ categories.id }}. {{ categories.name }}</a></h4>
+            <div>
+                <br>
+                <h4>
+                    <a href="{{ path('categorie', {'id': categories.id, 'ques': nbr ~ 1, 'victoire':  app.request.get('victoire') }) }}">
+                        {{ categories.id }}. {{ categories.name }}
+                    </a>
+                </h4>
+            </div>
+
+            {% set nbr = nbr + 1%}
+        {% endfor %}
     </div>
-
-    {% set nbr = nbr + 1%}
-{% endfor %}
+    <div class='col-md-6'>
+        {% if app.request.get('victoire') != null %}
+            <h2>Nombre de quiz validé: {{ app.request.get('victoire') }}</h2>
+            <a href='{{ path('home') }}'><button class='btn btn-success'>Reset score</button></a>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock %}

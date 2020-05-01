@@ -150,21 +150,50 @@ class UserController extends AbstractController
     /**
      * @Route("/createQuiz", name="create.quiz")
      */
-    public function createQuiz(Request $request)
+    public function createQuiz(Request $request, EntityManagerInterface $manager)
     {
         $categorie = new Categorie();
         $question = new Question();
         $reponse = new Reponse();
+        $reponse2 = new Reponse();
+        $reponse3 = new Reponse();
 
         $form = $this->createForm(CreateQuizType::class, [$categorie, $question, $reponse]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted()){
-            echo $_POST['create_quiz']['Question'];
-            echo $_POST['create_quiz']['ReponseCorrect'];
-            echo $_POST['create_quiz']['ReponseFausse_1'];
-            echo $_POST['create_quiz']['ReponseFausse_2'];
+            $repo = $this->getDoctrine()->getRepository(Categorie::class);
+            $idCategorie = $repo->findOneBy([
+                    'name' => $_POST['create_quiz']['Categorie']
+                ]);
+            
+            $question->setQuestion($_POST['create_quiz']['Question'])
+                     ->setIdCategorie($idCategorie->getId())
+                     ->setCategorie($idCategorie);
+            $manager->persist($question);
+            $manager->flush();
+
+            $reponse->setIdQuestion($question->getId())
+                    ->setReponse($_POST['create_quiz']['ReponseCorrect'])
+                    ->setReponseExpected(true)
+                    ->setQuestions($question);
+            $manager->persist($reponse);
+            $manager->flush();
+            
+            $reponse2->setIdQuestion($question->getId())
+                    ->setReponse($_POST['create_quiz']['ReponseFausse_1'])
+                    ->setReponseExpected(false)
+                    ->setQuestions($question);
+            $manager->persist($reponse2);
+            $manager->flush();
+            
+            $reponse3->setIdQuestion($question->getId())
+                    ->setReponse($_POST['create_quiz']['ReponseFausse_2'])
+                    ->setReponseExpected(false)
+                    ->setQuestions($question);
+            $manager->persist($reponse3);
+            $manager->flush();
         }
 
         if ($this->getUser()) {
