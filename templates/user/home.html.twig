@@ -24,7 +24,7 @@
     </div>
     <div class='col-md-6'>
         {% if app.request.get('victoire') != null %}
-            <h2>Nombre de quiz validé: {{ app.request.get('victoire') }}</h2>
+            <h2>Number of quizzes validated: {{ app.request.get('victoire') }}</h2>
             <a href='{{ path('home') }}'><button class='btn btn-success'>Reset score</button></a>
         {% endif %}
     </div>
